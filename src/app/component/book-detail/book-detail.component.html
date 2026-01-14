@@ -1,0 +1,71 @@
+<div class="container mt-4">
+  <button class="btn btn-secondary mb-4" (click)="goBack()">
+    <i class="bi bi-arrow-left"></i> Retour à la liste
+  </button>
+
+  <div *ngIf="isLoading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && book" class="row">
+    <div class="col-md-4">
+      <img [src]="getCoverUrl()" 
+           class="img-fluid rounded shadow" 
+           [alt]="book.title"
+           (error)="onImageError($event)">
+    </div>
+    
+    <div class="col-md-8">
+      <h1 class="mb-3">{{ book.title }}</h1>
+      
+      <div class="mb-3" *ngIf="book.subtitle">
+        <h5 class="text-muted">{{ book.subtitle }}</h5>
+      </div>
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Informations</h5>
+          
+          <p *ngIf="book.authors && book.authors.length > 0">
+            <strong>Auteur(s) :</strong> 
+            <span *ngFor="let author of book.authors; let last = last">
+              {{ author.name || author }}<span *ngIf="!last">, </span>
+            </span>
+          </p>
+
+          <p *ngIf="book.first_publish_date">
+            <strong>Première publication :</strong> {{ book.first_publish_date }}
+          </p>
+
+          <p *ngIf="book.edition_count">
+            <strong>Nombre d'éditions :</strong> {{ book.edition_count }}
+          </p>
+
+          <p *ngIf="book.number_of_pages">
+            <strong>Nombre de pages :</strong> {{ book.number_of_pages }}
+          </p>
+
+          <p *ngIf="book.subjects && book.subjects.length > 0">
+            <strong>Sujets :</strong>
+            <span class="badge bg-primary me-1" *ngFor="let subject of book.subjects.slice(0, 10)">
+              {{ subject }}
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Description</h5>
+          <p class="card-text">{{ getDescription() }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !book" class="alert alert-warning">
+    Livre non trouvé.
+  </div>
+</div>

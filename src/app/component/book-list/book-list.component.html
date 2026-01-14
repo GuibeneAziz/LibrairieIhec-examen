@@ -1,0 +1,49 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Livres d'Informatique</h2>
+
+  <app-search-bar 
+    (searchByTitle)="onSearchByTitle($event)"
+    (searchByYear)="onSearchByYear($event)"
+    (searchByTitleAndYear)="onSearchByTitleAndYear($event)"
+    (resetSearch)="onResetSearch()">
+  </app-search-bar>
+
+  <div *ngIf="isLoading" class="text-center my-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+    <p class="mt-3 text-muted">Chargement des livres...</p>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ errorMessage }}
+    <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+  </div>
+
+  <div *ngIf="!isLoading && booksList.length === 0" class="alert alert-info">
+    Aucun livre trouvé.
+  </div>
+
+  <div *ngIf="!isLoading && booksList.length > 0" class="alert alert-success">
+    {{ booksList.length }} livre(s) trouvé(s)
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4 mt-4" *ngIf="!isLoading">
+    <div class="col" *ngFor="let book of booksList">
+      <div class="card h-100 shadow-sm" style="cursor: pointer;" (click)="onBookClick(book)">
+        <img 
+          [src]="getCoverUrl(book)" 
+          class="card-img-top" 
+          alt="{{book.title}}"
+          style="height: 250px; object-fit: contain;"
+          (error)="onImageError($event)">
+        <div class="card-body">
+          <h5 class="card-title">{{ book.title }}</h5>
+          <p class="card-text text-muted small" *ngIf="book.first_publish_year">
+            Première édition : {{ book.first_publish_year }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
